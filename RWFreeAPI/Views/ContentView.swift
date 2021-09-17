@@ -28,7 +28,6 @@ struct ContentView: View {
                     .padding(.bottom, 8)
                     .padding([.leading, .trailing], 20)
                     .background(Color.listBkgd)
-                    //.background(Color.gradientDark)
                 }
                 .redacted(reason: store.loading ? .placeholder : [])
             }

@@ -6,14 +6,17 @@ class VideoURL: ObservableObject {
     init(videoId: Int) {
         let baseURLString = "https://api.raywenderlich.com/api/videos/"
         let queryURLString = baseURLString + String(videoId) + "/stream"
+        
         guard let queryURL = URL(string: queryURLString) else { return }
+        
         URLSession.shared.dataTask(with: queryURL) { data, response, error in
             if let data = data, let response = response as? HTTPURLResponse {
             
-                if response.statusCode != 200 {
+                guard response.statusCode == 200 else {
                     print("\(videoId) \(response.statusCode)")
                     return
                 }
+                
                 if let decodedResponse = try? JSONDecoder().decode(
                     VideoURLString.self, from: data) {
                 
@@ -45,12 +48,9 @@ struct VideoAttributes: Codable {
 
 extension VideoURLString: Decodable {
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(
-            keyedBy: CodingKeys.self)
-        let dataContainer = try container.nestedContainer(
-            keyedBy: DataKeys.self, forKey: .data)
-        let attr = try dataContainer.decode(
-            VideoAttributes.self, forKey: .attributes)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let dataContainer = try container.nestedContainer(keyedBy: DataKeys.self, forKey: .data)
+        let attr = try dataContainer.decode(VideoAttributes.self, forKey: .attributes)
         urlString = attr.url
     }
 }

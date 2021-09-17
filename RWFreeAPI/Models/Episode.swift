@@ -55,26 +55,18 @@ extension Episode {
             keyedBy: DataKeys.self)
         let id = try container.decode(String.self, forKey: .id)
         
-        let attrs = try container.nestedContainer(
-            keyedBy: AttrsKeys.self, forKey: .attributes)
+        let attrs = try container.nestedContainer(keyedBy: AttrsKeys.self, forKey: .attributes)
         let uri = try attrs.decode(String.self, forKey: .uri)
         let name = try attrs.decode(String.self, forKey: .name)
         let parentName = try attrs.decode(String?.self, forKey: .parentName)
-        let releasedAt = try attrs.decode(
-            String.self, forKey: .releasedAt)
-        let releaseDate = Formatter.iso8601.date(
-            from: releasedAt)!
-        let difficulty = try attrs.decode(
-            String?.self, forKey: .difficulty)
-        let description = try attrs.decode(
-            String.self, forKey: .description)
-        let videoIdentifier = try attrs.decode(
-            Int?.self, forKey: .videoIdentifier)
+        let releasedAt = try attrs.decode(String.self, forKey: .releasedAt)
+        let releaseDate = Formatter.iso8601.date(from: releasedAt)!
+        let difficulty = try attrs.decode(String?.self, forKey: .difficulty)
+        let description = try attrs.decode(String.self, forKey: .description)
+        let videoIdentifier = try attrs.decode(Int?.self, forKey: .videoIdentifier)
         
-        let rels = try container.nestedContainer(
-            keyedBy: RelKeys.self, forKey: .relationships)
-        let domains = try rels.decode(
-            Domains.self, forKey: .domains)
+        let rels = try container.nestedContainer(keyedBy: RelKeys.self, forKey: .relationships)
+        let domains = try rels.decode( Domains.self, forKey: .domains)
         if let domainId = domains.data.first?["id"] {
             self.domain = Episode.domainDictionary[domainId] ?? ""
         }
@@ -83,8 +75,7 @@ extension Episode {
         self.uri = uri
         self.name = name
         self.parentName = parentName
-        self.released = DateFormatter.episodeDateFormatter.string(
-            from: releaseDate)
+        self.released = DateFormatter.episodeDateFormatter.string(from: releaseDate)
         self.difficulty = difficulty
         self.description = description
         if let videoId = videoIdentifier {
